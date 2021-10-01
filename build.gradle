@@ -1,0 +1,63 @@
+buildscript {
+	repositories {
+		mavenCentral();
+		maven {
+			name = "sonatype";
+			url = "https://oss.sonatype.org/content/repositories/snapshots/";
+		}
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+}
+
+plugins {
+	id 'java';
+	id 'eclipse';
+	id 'org.cadixdev.licenser' version '0.6.1';
+	id 'maven-publish';
+}
+
+group = 'com.playsawdust.chipper'
+archivesBaseName = 'glow-io'
+version = '0.0.1'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(16)
+	}
+}
+
+repositories {
+	mavenCentral()
+	//maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+	//maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+	runtimeOnly 'com.google.guava:guava:28.2-jre'
+	implementation 'com.google.guava:guava:28.2-jre'
+	runtimeOnly 'org.joml:joml:1.9.12'
+	implementation 'org.joml:joml:1.9.12'
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+license {
+	header = project.file('headers/mpl2.txt')
+	include '**/*.java'
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			groupId = project.group
+			artifactId = project.archivesBaseName
+			version = project.version
+
+			from components.java
+		}
+	}
+}
